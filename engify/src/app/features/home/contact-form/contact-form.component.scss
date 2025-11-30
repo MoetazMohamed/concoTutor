@@ -1,0 +1,13 @@
+:host {
+  flex: 2;
+  min-width: 300px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}

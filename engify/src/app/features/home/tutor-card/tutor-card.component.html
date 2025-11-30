@@ -1,0 +1,17 @@
+<div class="tutor-card">
+  <!-- <div
+    class="tutor-img"
+    [ngStyle]="{ 'background-image': 'url(' + tutor.imageUrl + ')' }"
+  ></div> -->
+
+  <h3>{{ tutor.name }}</h3>
+  <span class="badge">{{ tutor.role }}</span>
+  <p class="bio">{{ tutor.bio }}</p>
+  <p class="experience">
+    <i class="fas fa-star"></i> {{ tutor.experience }}
+  </p>
+
+  <a routerLink="/" fragment="contact" class="btn-outline">
+    {{ tutor.ctaLabel }}
+  </a>
+</div>

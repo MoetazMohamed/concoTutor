@@ -1,0 +1,15 @@
+<h2>Ready to improve your GPA?</h2>
+<p>Fill out the form or scan the code to contact us on WhatsApp.</p>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <input type="text" placeholder="Your Name" formControlName="name" />
+  <input type="email" placeholder="Concordia Email" formControlName="email" />
+  <select formControlName="subject">
+    <option value="">Select Subject</option>
+    <option>Computer Science</option>
+    <option>Commerce/Business</option>
+    <option>Math/Stats</option>
+  </select>
+
+  <button type="submit" class="btn-main">Send Request</button>
+</form>

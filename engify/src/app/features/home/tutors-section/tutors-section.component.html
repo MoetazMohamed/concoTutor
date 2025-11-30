@@ -1,0 +1,14 @@
+<section>
+  <div class="container">
+    <h2>Meet The Team</h2>
+    <p class="subtitle">Experienced tutors ready to help.</p>
+
+    <div class="tutor-grid">
+      @for (tutor of tutors; track tutor.name) {
+        <app-tutor-card
+          [tutor]="tutor"
+        ></app-tutor-card>
+      }
+    </div>
+  </div>
+</section>

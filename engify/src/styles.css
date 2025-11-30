@@ -1,0 +1,59 @@
+/* styles.scss */
+
+:root {
+  --primary: #912338; /* Concordia Maroon */
+  --secondary: #db9e1b; /* Gold */
+  --dark: #333;
+  --light: #f4f4f4;
+  --white: #fff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #fff;
+}
+
+/* Utilities shared by multiple sections */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+section {
+  padding: 4rem 5%;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--primary);
+}
+
+.btn-main {
+  display: inline-block;
+  background: var(--secondary);
+  color: var(--dark);
+  padding: 12px 30px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 5px;
+  margin-top: 20px;
+  transition: 0.3s;
+}
+
+.btn-main:hover {
+  transform: translateY(-3px);
+}
+
+/* etc. You can move other generic rules here later */
