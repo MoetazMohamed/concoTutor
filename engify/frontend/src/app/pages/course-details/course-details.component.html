@@ -33,9 +33,20 @@
 
       <section class="bundles-section">
         <h2>Available Bundles</h2>
+        <p class="bundle-hint">Select a bundle to view available sessions</p>
         <div class="bundles-list">
-          <div class="bundle-item" *ngFor="let bundle of course.bundles">
-            <input type="radio" [value]="bundle" name="bundle" />
+          <div 
+            class="bundle-item" 
+            *ngFor="let bundle of course.bundles"
+            [class.selected]="selectedBundle === bundle"
+            (click)="onBundleSelected(bundle)"
+          >
+            <input 
+              type="radio" 
+              [value]="bundle" 
+              [checked]="selectedBundle === bundle"
+              name="bundle" 
+            />
             <label>{{ bundle }}</label>
           </div>
         </div>
@@ -58,8 +69,19 @@
             <span>Duration:</span>
             <strong>{{ course.duration }}</strong>
           </div>
+          <div class="detail-row" *ngIf="selectedBundle">
+            <span>Bundle:</span>
+            <strong>{{ selectedBundle }}</strong>
+          </div>
         </div>
-        <button class="btn-book" (click)="bookCourse()">Book Now</button>
+        <button 
+          class="btn-book" 
+          (click)="bookCourse()"
+          [disabled]="!selectedBundle"
+          [class.disabled]="!selectedBundle"
+        >
+          {{ selectedBundle ? 'Book Now' : 'Select a Bundle First' }}
+        </button>
       </div>
     </aside>
   </div>

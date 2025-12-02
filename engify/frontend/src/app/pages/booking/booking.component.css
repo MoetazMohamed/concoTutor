@@ -11,6 +11,26 @@
   font-size: 32px;
 }
 
+.booking-header {
+  background-color: #e7f5ff;
+  border-left: 4px solid #007bff;
+  padding: 20px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+
+.header-info h3 {
+  margin: 0 0 5px 0;
+  color: #007bff;
+  font-size: 20px;
+}
+
+.header-info p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
 .booking-main {
   display: grid;
   grid-template-columns: 1fr 350px;
@@ -113,6 +133,9 @@
 .info-row .value {
   color: #333;
   font-weight: 500;
+  text-align: right;
+  flex: 1;
+  margin-left: 10px;
 }
 
 .info-row .value.seats {
@@ -187,11 +210,13 @@
   border-radius: 6px;
   margin: 20px 0;
   border: 1px solid #ddd;
+  text-align: left;
 }
 
 .confirmation-details p {
   margin: 8px 0;
   color: #333;
+  font-size: 14px;
 }
 
 .btn-new-booking {

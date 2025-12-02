@@ -26,6 +26,7 @@ interface CourseDetail {
 export class CourseDetailsComponent implements OnInit {
   course: CourseDetail | null = null;
   courseId: number | null = null;
+  selectedBundle: string | null = null;
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
@@ -89,8 +90,20 @@ export class CourseDetailsComponent implements OnInit {
 
   bookCourse() {
     if (this.courseId) {
-      this.router.navigate(['/booking']);
+      if (this.selectedBundle) {
+        this.router.navigate(['/booking'], { 
+          queryParams: { courseId: this.courseId, bundle: this.selectedBundle }
+        });
+      } else {
+        this.router.navigate(['/booking'], { 
+          queryParams: { courseId: this.courseId }
+        });
+      }
     }
+  }
+
+  onBundleSelected(bundle: string) {
+    this.selectedBundle = bundle;
   }
 
   goBack() {

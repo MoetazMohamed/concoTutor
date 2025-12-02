@@ -112,11 +112,18 @@ section h2 {
   gap: 15px;
 }
 
+.bundle-hint {
+  color: #999;
+  font-size: 14px;
+  margin: 0 0 15px 0;
+  font-style: italic;
+}
+
 .bundle-item {
   display: flex;
   align-items: center;
   padding: 15px;
-  border: 1px solid #e0e0e0;
+  border: 2px solid #e0e0e0;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -125,6 +132,12 @@ section h2 {
 .bundle-item:hover {
   background-color: #f5f5f5;
   border-color: #007bff;
+}
+
+.bundle-item.selected {
+  background-color: #e7f5ff;
+  border-color: #007bff;
+  font-weight: 600;
 }
 
 .bundle-item input[type="radio"] {
@@ -189,8 +202,15 @@ section h2 {
   transition: background-color 0.3s ease;
 }
 
-.btn-book:hover {
+.btn-book:hover:not(:disabled) {
   background-color: #218838;
+}
+
+.btn-book:disabled,
+.btn-book.disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .course-not-found {

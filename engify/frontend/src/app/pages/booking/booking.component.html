@@ -1,6 +1,13 @@
 <div class="booking-container">
   <h2>Book Your Session</h2>
   
+  <div class="booking-header" *ngIf="courseName || selectedBundle">
+    <div class="header-info">
+      <h3>{{ courseName }}</h3>
+      <p *ngIf="selectedBundle">{{ selectedBundle }}</p>
+    </div>
+  </div>
+
   <div class="booking-main">
     <div class="calendar-section">
       <h3>Available Sessions</h3>
@@ -15,6 +22,10 @@
           <div class="info-row">
             <span class="label">Course:</span>
             <span class="value">{{ selectedSession.title }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Bundle:</span>
+            <span class="value">{{ selectedSession.bundle }}</span>
           </div>
           <div class="info-row">
             <span class="label">Instructor:</span>
@@ -47,6 +58,7 @@
           <p>Your session has been successfully booked.</p>
           <div class="confirmation-details">
             <p><strong>{{ selectedSession.title }}</strong></p>
+            <p>{{ selectedSession.bundle }}</p>
             <p>{{ selectedSession.start | date: 'MMMM d, y - h:mm a' }}</p>
             <p>Instructor: {{ selectedSession.instructor }}</p>
           </div>
