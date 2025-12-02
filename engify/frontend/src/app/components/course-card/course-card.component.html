@@ -1,0 +1,24 @@
+<div class="course-card" *ngIf="course">
+  <div class="card-header">
+    <h3>{{ course.title }}</h3>
+    <span class="level-badge">{{ course.level }}</span>
+  </div>
+  <div class="card-body">
+    <p class="description">{{ course.description }}</p>
+    <div class="course-meta">
+      <div class="meta-item">
+        <span class="label">Instructor:</span>
+        <span>{{ course.instructor }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="label">Duration:</span>
+        <span>{{ course.duration }}</span>
+      </div>
+      <div class="meta-item">
+        <span class="label">Price:</span>
+        <span class="price">${{ course.price }}</span>
+      </div>
+    </div>
+  </div>
+  <button class="btn-view-details" (click)="onSelectCourse()">View Details</button>
+</div>

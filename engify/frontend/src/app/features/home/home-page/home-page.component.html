@@ -1,4 +1,20 @@
 <app-hero-section></app-hero-section>
+
+<!-- Featured Courses Section -->
+<section class="featured-courses-section" id="courses">
+  <div class="courses-container">
+    <h2>Featured Courses</h2>
+    <p>Explore our most popular courses</p>
+    <div class="courses-grid">
+      <app-course-card
+        *ngFor="let course of featuredCourses"
+        [course]="course"
+        (courseSelected)="onCourseSelected($event)"
+      ></app-course-card>
+    </div>
+  </div>
+</section>
+
 <app-about-section id="about"></app-about-section>
 <app-tutors-section id="tutors"></app-tutors-section>
 <app-contact-section id="contact"></app-contact-section>

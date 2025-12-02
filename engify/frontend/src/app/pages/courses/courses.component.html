@@ -1,0 +1,13 @@
+<div class="courses-container">
+  <div class="courses-header">
+    <h1>Our Courses</h1>
+    <p>Choose from our wide range of professional courses</p>
+  </div>
+  <div class="courses-grid">
+    <app-course-card
+      *ngFor="let course of courses"
+      [course]="course"
+      (courseSelected)="onCourseSelected($event)"
+    ></app-course-card>
+  </div>
+</div>

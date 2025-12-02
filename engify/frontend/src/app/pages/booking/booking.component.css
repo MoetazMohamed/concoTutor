@@ -1,0 +1,263 @@
+.booking-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.booking-container h2 {
+  margin-top: 0;
+  color: #333;
+  margin-bottom: 30px;
+  font-size: 32px;
+}
+
+.booking-main {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 30px;
+}
+
+.calendar-section {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-section h3 {
+  margin-top: 0;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.calendar-section p {
+  color: #666;
+  margin: 0 0 20px 0;
+}
+
+/* FullCalendar Styling */
+::ng-deep .fc {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+::ng-deep .fc-button-primary {
+  background-color: #007bff !important;
+  border-color: #007bff !important;
+}
+
+::ng-deep .fc-button-primary:not(:disabled).fc-button-active {
+  background-color: #0056b3 !important;
+  border-color: #0056b3 !important;
+}
+
+::ng-deep .fc-button-primary:not(:disabled):hover {
+  background-color: #0056b3 !important;
+}
+
+::ng-deep .fc-event {
+  cursor: pointer !important;
+  transition: all 0.2s ease;
+}
+
+::ng-deep .fc-event:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+/* Sidebar */
+.session-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.selected-session-card,
+.booking-confirmed,
+.no-selection {
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.selected-session-card h3,
+.booking-confirmed h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 18px;
+}
+
+.session-info {
+  margin-bottom: 20px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-row .label {
+  color: #999;
+  font-weight: 600;
+}
+
+.info-row .value {
+  color: #333;
+  font-weight: 500;
+}
+
+.info-row .value.seats {
+  color: #28a745;
+  font-weight: 700;
+}
+
+.info-row .value.seats.limited {
+  color: #dc3545;
+}
+
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-confirm {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-confirm:hover {
+  background-color: #0056b3;
+}
+
+.btn-cancel {
+  padding: 12px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #5a6268;
+}
+
+.booking-confirmed {
+  background: linear-gradient(135deg, #e7f5ff 0%, #f0f8ff 100%);
+  border-left: 4px solid #28a745;
+}
+
+.success-message {
+  text-align: center;
+}
+
+.success-message h3 {
+  color: #28a745;
+  margin: 0 0 10px 0;
+}
+
+.success-message p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.confirmation-details {
+  background-color: white;
+  padding: 15px;
+  border-radius: 6px;
+  margin: 20px 0;
+  border: 1px solid #ddd;
+}
+
+.confirmation-details p {
+  margin: 8px 0;
+  color: #333;
+}
+
+.btn-new-booking {
+  margin-top: 15px;
+  padding: 12px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-new-booking:hover {
+  background-color: #218838;
+}
+
+.no-selection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  background-color: #f9f9f9;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+}
+
+.no-selection p {
+  margin: 0;
+  color: #999;
+  text-align: center;
+  font-style: italic;
+}
+
+@media (max-width: 1024px) {
+  .booking-main {
+    grid-template-columns: 1fr;
+  }
+
+  .session-sidebar {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-container {
+    padding: 20px;
+  }
+
+  .booking-container h2 {
+    font-size: 24px;
+  }
+
+  .calendar-section {
+    padding: 20px;
+  }
+
+  .session-sidebar {
+    flex-direction: column;
+  }
+
+  .selected-session-card,
+  .booking-confirmed,
+  .no-selection {
+    padding: 20px;
+  }
+}
