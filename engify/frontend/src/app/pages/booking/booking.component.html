@@ -1,0 +1,74 @@
+<div class="booking-container">
+  <h2>Book Your Session</h2>
+  
+  <div class="booking-header" *ngIf="courseName || selectedBundle">
+    <div class="header-info">
+      <h3>{{ courseName }}</h3>
+      <p *ngIf="selectedBundle">{{ selectedBundle }}</p>
+    </div>
+  </div>
+
+  <div class="booking-main">
+    <div class="calendar-section">
+      <h3>Available Sessions</h3>
+      <p>Click on any session to select it</p>
+      <full-calendar [options]="calendarOptions"></full-calendar>
+    </div>
+
+    <aside class="session-sidebar">
+      <div class="selected-session-card" *ngIf="selectedSession && !bookingConfirmed">
+        <h3>Session Details</h3>
+        <div class="session-info">
+          <div class="info-row">
+            <span class="label">Course:</span>
+            <span class="value">{{ selectedSession.title }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Bundle:</span>
+            <span class="value">{{ selectedSession.bundle }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Instructor:</span>
+            <span class="value">{{ selectedSession.instructor }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Date & Time:</span>
+            <span class="value">{{ selectedSession.start | date: 'MMM d, y - h:mm a' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Duration:</span>
+            <span class="value">1 hour</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Available Seats:</span>
+            <span class="value seats" [ngClass]="{ 'limited': selectedSession.availableSeats <= 3 }">
+              {{ selectedSession.availableSeats }} seats
+            </span>
+          </div>
+        </div>
+        <div class="button-group">
+          <button class="btn-confirm" (click)="confirmBooking()">Confirm Booking</button>
+          <button class="btn-cancel" (click)="cancelSelection()">Cancel</button>
+        </div>
+      </div>
+
+      <div class="booking-confirmed" *ngIf="bookingConfirmed">
+        <div class="success-message">
+          <h3>✓ Booking Confirmed!</h3>
+          <p>Your session has been successfully booked.</p>
+          <div class="confirmation-details">
+            <p><strong>{{ selectedSession.title }}</strong></p>
+            <p>{{ selectedSession.bundle }}</p>
+            <p>{{ selectedSession.start | date: 'MMMM d, y - h:mm a' }}</p>
+            <p>Instructor: {{ selectedSession.instructor }}</p>
+          </div>
+          <button class="btn-new-booking" (click)="cancelSelection()">Book Another Session</button>
+        </div>
+      </div>
+
+      <div class="no-selection" *ngIf="!selectedSession">
+        <p>Select a session from the calendar to see details and book</p>
+      </div>
+    </aside>
+  </div>
+</div>

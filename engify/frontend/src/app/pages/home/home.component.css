@@ -1,0 +1,94 @@
+.home-container {
+  width: 100%;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.hero-content h1 {
+  margin: 0 0 10px 0;
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.hero-content p {
+  margin: 0 0 30px 0;
+  font-size: 20px;
+  opacity: 0.9;
+}
+
+.btn-explore {
+  display: inline-block;
+  padding: 14px 32px;
+  background-color: white;
+  color: #667eea;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-explore:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.tutors-section {
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.qr-section {
+  background-color: #f9f9f9;
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.cta-section {
+  background-color: #f0f0f0;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.cta-section h2 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 32px;
+}
+
+.cta-section p {
+  margin: 0 0 30px 0;
+  color: #666;
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 36px;
+  }
+
+  .hero-content p {
+    font-size: 18px;
+  }
+
+  .hero-section {
+    padding: 60px 20px;
+  }
+
+  .cta-section h2 {
+    font-size: 24px;
+  }
+
+  .cta-section p {
+    font-size: 16px;
+  }
+}

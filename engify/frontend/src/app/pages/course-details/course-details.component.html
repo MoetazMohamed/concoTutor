@@ -1,0 +1,93 @@
+<div class="course-details-container" *ngIf="course">
+  <button class="btn-back" (click)="goBack()">← Back to Courses</button>
+
+  <div class="course-header">
+    <h1>{{ course.title }}</h1>
+    <div class="course-meta">
+      <span class="level-badge">{{ course.level }}</span>
+      <span class="duration">Duration: {{ course.duration }}</span>
+      <span class="price">${{ course.price }}</span>
+    </div>
+  </div>
+
+  <div class="course-content">
+    <div class="main-content">
+      <section class="description-section">
+        <h2>About This Course</h2>
+        <p>{{ course.description }}</p>
+        <p>{{ course.fullDescription }}</p>
+      </section>
+
+      <section class="instructor-section">
+        <h2>Course Instructor</h2>
+        <div class="instructor-card">
+          <h3>{{ course.instructor }}</h3>
+          <p>Lead Instructor for this course</p>
+        </div>
+      </section>
+
+      <section class="tutors-section">
+        <h2>Course Tutors</h2>
+        <app-tutors></app-tutors>
+      </section>
+
+      <section class="bundles-section">
+        <h2>Available Bundles</h2>
+        <p class="bundle-hint">Select a bundle to view available sessions</p>
+        <div class="bundles-list">
+          <div 
+            class="bundle-item" 
+            *ngFor="let bundle of course.bundles"
+            [class.selected]="selectedBundle === bundle"
+            (click)="onBundleSelected(bundle)"
+          >
+            <input 
+              type="radio" 
+              [value]="bundle" 
+              [checked]="selectedBundle === bundle"
+              name="bundle" 
+            />
+            <label>{{ bundle }}</label>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="sidebar">
+      <div class="booking-card">
+        <h3>Ready to Enroll?</h3>
+        <div class="booking-details">
+          <div class="detail-row">
+            <span>Course:</span>
+            <strong>{{ course.title }}</strong>
+          </div>
+          <div class="detail-row">
+            <span>Price:</span>
+            <strong>${{ course.price }}</strong>
+          </div>
+          <div class="detail-row">
+            <span>Duration:</span>
+            <strong>{{ course.duration }}</strong>
+          </div>
+          <div class="detail-row" *ngIf="selectedBundle">
+            <span>Bundle:</span>
+            <strong>{{ selectedBundle }}</strong>
+          </div>
+        </div>
+        <button 
+          class="btn-book" 
+          (click)="bookCourse()"
+          [disabled]="!selectedBundle"
+          [class.disabled]="!selectedBundle"
+        >
+          {{ selectedBundle ? 'Book Now' : 'Select a Bundle First' }}
+        </button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div class="course-not-found" *ngIf="!course">
+  <p>Course not found</p>
+  <button (click)="goBack()">Back to Courses</button>
+</div>
