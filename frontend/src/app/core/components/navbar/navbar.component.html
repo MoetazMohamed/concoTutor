@@ -3,6 +3,18 @@
   <ul class="nav-links">
     <li><a routerLink="/">Home</a></li>
     <li><a routerLink="/courses">Courses</a></li>
-    <li><a routerLink="/booking" class="btn-nav">Book Session</a></li>
+    <li *ngIf="authService.isAuthenticated()">
+      <a [routerLink]="getDashboardLink()">{{ getDashboardLabel() }}</a>
+    </li>
   </ul>
+  <div class="nav-auth">
+    <div *ngIf="authService.isAuthenticated()" class="user-menu">
+      <span class="user-name">{{ authService.getUser()?.name }}</span>
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </div>
+    <div *ngIf="!authService.isAuthenticated()" class="auth-links">
+      <a routerLink="/login" class="btn-login">Login</a>
+      <a routerLink="/register" class="btn-register">Register</a>
+    </div>
+  </div>
 </nav>

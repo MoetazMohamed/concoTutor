@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -8,6 +9,8 @@ async function main() {
   // Create TAs
   const ta1 = await prisma.ta.create({
     data: {
+      email: 'alice@example.com',
+      password: 'hashed_password_1',
       name: 'Alice Johnson',
       degree: 'Bachelor of Science in Computer Science',
       gpa: 3.8,
@@ -17,6 +20,8 @@ async function main() {
 
   const ta2 = await prisma.ta.create({
     data: {
+      email: 'bob@example.com',
+      password: 'hashed_password_2',
       name: 'Bob Smith',
       degree: 'Bachelor of Science in Computer Science',
       gpa: 3.6,
@@ -26,6 +31,8 @@ async function main() {
 
   const ta3 = await prisma.ta.create({
     data: {
+      email: 'carol@example.com',
+      password: 'hashed_password_3',
       name: 'Carol Davis',
       degree: 'Master of Science in Computer Science',
       gpa: 3.9,
@@ -142,21 +149,30 @@ async function main() {
   const student1 = await prisma.student.create({
     data: {
       email: 'student1@example.com',
+      password: 'hashed_password_s1',
       name: 'John Doe',
+      totalCredits: 50,
+      usedCredits: 0,
     },
   });
 
   const student2 = await prisma.student.create({
     data: {
       email: 'student2@example.com',
+      password: 'hashed_password_s2',
       name: 'Jane Smith',
+      totalCredits: 50,
+      usedCredits: 0,
     },
   });
 
   const student3 = await prisma.student.create({
     data: {
       email: 'student3@example.com',
+      password: 'hashed_password_s3',
       name: 'Mike Johnson',
+      totalCredits: 50,
+      usedCredits: 0,
     },
   });
 

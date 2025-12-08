@@ -38,4 +38,18 @@ export class BookingsController {
   ) {
     return this.bookingsService.cancelBooking(bookingId);
   }
+
+  @Post('availability-slot')
+  async bookAvailabilitySlot(
+    @Body()
+    dto: {
+      studentId: string;
+      taId: string;
+      courseId: string;
+      availabilitySlotId: string;
+      creditsToUse: number;
+    },
+  ) {
+    return this.bookingsService.bookAvailabilitySlot(dto);
+  }
 }

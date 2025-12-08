@@ -1,0 +1,70 @@
+<div class="login-container">
+  <div class="login-card">
+    <h1>Engify Login</h1>
+
+    <!-- User Type Toggle -->
+    <div class="user-type-selector">
+      <button
+        [class.active]="userType === 'student'"
+        (click)="toggleUserType('student')"
+        class="toggle-btn"
+      >
+        Student
+      </button>
+      <button
+        [class.active]="userType === 'ta'"
+        (click)="toggleUserType('ta')"
+        class="toggle-btn"
+      >
+        Tutor
+      </button>
+    </div>
+
+    <!-- Messages -->
+    <div *ngIf="errorMessage" class="alert alert-error">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+
+    <!-- Login Form -->
+    <form (ngSubmit)="login()">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="your@email.com"
+          [disabled]="loading"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Enter your password"
+          [disabled]="loading"
+          required
+        />
+      </div>
+
+      <button type="submit" class="login-btn" [disabled]="loading">
+        {{ loading ? 'Logging in...' : 'Login' }}
+      </button>
+    </form>
+
+    <!-- Sign Up Link -->
+    <div class="signup-link">
+      Don't have an account?
+      <a href="/register">Sign up here</a>
+    </div>
+  </div>
+</div>

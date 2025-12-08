@@ -40,28 +40,70 @@ enum BundleCoverageType {
 model Student {
   id        String   @id @default(cuid())
   email     String   @unique
+  password  String
   name      String
+  totalCredits      Int     @default(0)
+  usedCredits       Int     @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   bookings         BookingStudent[]
   bundlePurchases  BundlePurchase[]
+  creditHistory    CreditTransaction[]
 
   @@map("students")
 }
 
 model Ta {
-  id     String  @id @default(cuid())
-  name   String
-  degree String?
-  gpa    Float?
-  bio    String?
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  degree    String?
+  gpa       Float?
+  bio       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   bookings              Booking[]
   groupSessionTemplates GroupSessionTemplate[]
   courses               CourseTA[]
+  availabilitySlots     TAAvailability[]
 
   @@map("tas")
+}
+
+model CreditTransaction {
+  id        String   @id @default(cuid())
+  studentId String
+  amount    Int
+  type      String   // "ADD", "DEDUCT", "REFUND"
+  reason    String?
+  createdAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@map("credit_transactions")
+}
+
+model TAAvailability {
+  id          String   @id @default(cuid())
+  taId        String
+  courseId    String
+  date        DateTime // Specific date for availability
+  startTime   String   // HH:mm format
+  endTime     String   // HH:mm format
+  capacity    Int
+  bookedCount Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  ta     Ta     @relation(fields: [taId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([taId, courseId, date, startTime])
+  @@map("ta_availability")
 }
 
 model Course {
@@ -75,6 +117,7 @@ model Course {
   groupSessionTemplates GroupSessionTemplate[]
   bundlePurchases       BundlePurchase[]
   tas                   CourseTA[]
+  taAvailability        TAAvailability[]
 
   @@map("courses")
 }

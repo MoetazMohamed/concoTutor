@@ -19,51 +19,59 @@
   background-color: #dee2e6;
 }
 
-.course-header {
-  margin-bottom: 40px;
-}
-
-.course-header h1 {
-  margin: 0 0 20px 0;
-  color: #333;
-  font-size: 36px;
-}
-
-.course-meta {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.level-badge {
-  display: inline-block;
-  padding: 6px 14px;
-  background-color: #007bff;
-  color: white;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.duration {
+.loading,
+.empty-state {
+  text-align: center;
+  padding: 40px;
   color: #666;
   font-size: 16px;
 }
 
-.price {
-  color: #28a745;
-  font-size: 24px;
-  font-weight: 700;
+.alert {
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.alert-error {
+  background: #fee;
+  color: #c33;
+  border-left: 4px solid #c33;
+}
+
+.alert-success {
+  background: #efe;
+  color: #3c3;
+  border-left: 4px solid #3c3;
+}
+
+.course-header {
+  margin-bottom: 40px;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.course-header h1 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 36px;
+}
+
+.code {
+  color: #667;
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.description {
+  color: #666;
+  font-size: 16px;
+  margin: 10px 0 0 0;
 }
 
 .course-content {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 40px;
-}
-
-.main-content {
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -74,10 +82,323 @@ section {
   padding: 30px;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 section h2 {
   margin-top: 0;
+  margin-bottom: 25px;
+  color: #333;
+  font-size: 24px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 15px;
+}
+
+/* Tutors Grid */
+.tutors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.tutor-card {
+  background: #f9f9f9;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.tutor-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+
+.tutor-card h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.tutor-card p {
+  margin: 8px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Availability Section */
+.calendar-info {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #f0f4ff;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.calendar-container {
+  margin-top: 20px;
+}
+
+/* FullCalendar Customization */
+::ng-deep .fc {
+  font-family: inherit;
+}
+
+::ng-deep .fc .fc-button-primary {
+  background-color: #667eea;
+  border-color: #667eea;
+}
+
+::ng-deep .fc .fc-button-primary:hover {
+  background-color: #764ba2;
+  border-color: #764ba2;
+}
+
+::ng-deep .fc .fc-button-primary:disabled {
+  background-color: #ccc;
+  border-color: #ccc;
+}
+
+::ng-deep .fc-event {
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+::ng-deep .fc-event:hover {
+  opacity: 0.9;
+}
+
+::ng-deep .fc-daygrid-event {
+  white-space: normal;
+}
+
+::ng-deep .fc-timegrid-event {
+  border-radius: 4px;
+}
+
+.availability-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.slot-card {
+  border: 2px solid #eee;
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.slot-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+
+.slot-card.selected {
+  border-color: #667eea;
+  background: #f0f4ff;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.slot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.slot-header h4 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.tutor-name {
+  background: #667eea;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.slot-details p {
+  margin: 8px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.btn-select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-select:hover:not(:disabled) {
+  background: #764ba2;
+}
+
+.btn-select:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Booking Section */
+.booking-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.booking-section h2 {
+  color: white;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.booking-card {
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  border-radius: 8px;
+  padding: 25px;
+  margin-top: 20px;
+}
+
+.booking-info {
+  background: #f9f9f9;
+  border-left: 4px solid #667eea;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.booking-info p {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.credits-section {
+  margin: 20px 0;
+  padding: 15px;
+  background: #f0f4ff;
+  border-radius: 5px;
+}
+
+.credits-section label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.credits-section input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.credits-info {
+  background: white;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.credits-info p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.credits-info strong {
+  color: #333;
+}
+
+.warning {
+  color: #d33 !important;
+  font-weight: 600;
+}
+
+.btn-book {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.btn-book:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.btn-cancel {
+  width: 100%;
+  padding: 10px;
+  background: #e9ecef;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.btn-cancel:hover {
+  background: #dee2e6;
+}
+
+.btn-book:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .course-header {
+    font-size: 24px;
+  }
+
+  .course-content {
+    grid-template-columns: 1fr;
+  }
+
+  .tutors-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .availability-grid {
+    grid-template-columns: 1fr;
+  }
+
+  section {
+    padding: 20px;
+  }
+
+  section h2 {
+    font-size: 20px;
+  }
+}
+
+.empty-state {
   margin-bottom: 20px;
   color: #333;
   font-size: 22px;

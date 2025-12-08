@@ -1,93 +1,89 @@
-<div class="course-details-container" *ngIf="course">
+<div class="course-details-container">
   <button class="btn-back" (click)="goBack()">← Back to Courses</button>
 
-  <div class="course-header">
-    <h1>{{ course.title }}</h1>
-    <div class="course-meta">
-      <span class="level-badge">{{ course.level }}</span>
-      <span class="duration">Duration: {{ course.duration }}</span>
-      <span class="price">${{ course.price }}</span>
-    </div>
+  <div *ngIf="loading" class="loading">
+    <p>Loading course details...</p>
   </div>
 
-  <div class="course-content">
-    <div class="main-content">
-      <section class="description-section">
-        <h2>About This Course</h2>
-        <p>{{ course.description }}</p>
-        <p>{{ course.fullDescription }}</p>
-      </section>
+  <div *ngIf="errorMessage" class="alert alert-error">
+    {{ errorMessage }}
+  </div>
 
-      <section class="instructor-section">
-        <h2>Course Instructor</h2>
-        <div class="instructor-card">
-          <h3>{{ course.instructor }}</h3>
-          <p>Lead Instructor for this course</p>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="course && !loading" class="course-header">
+    <h1>{{ course.name }}</h1>
+    <p class="code">Course Code: {{ course.code }}</p>
+    <p class="description">{{ course.description }}</p>
+  </div>
+
+  <div *ngIf="course && !loading" class="course-content">
+    <!-- Tutors Section -->
+    <section class="tutors-section">
+      <h2>Meet Your Tutors</h2>
+      <div class="tutors-grid">
+        <div *ngFor="let tutor of course.tas" class="tutor-card">
+          <h3>{{ tutor.name }}</h3>
+          <p><strong>Email:</strong> {{ tutor.email }}</p>
+          <p *ngIf="tutor.bio"><strong>Bio:</strong> {{ tutor.bio }}</p>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="tutors-section">
-        <h2>Course Tutors</h2>
-        <app-tutors></app-tutors>
-      </section>
+    <!-- Availability Section -->
+    <section class="availability-section">
+      <h2>Available Time Slots</h2>
+      <p class="calendar-info">Click on any available slot to select it for booking</p>
 
-      <section class="bundles-section">
-        <h2>Available Bundles</h2>
-        <p class="bundle-hint">Select a bundle to view available sessions</p>
-        <div class="bundles-list">
-          <div 
-            class="bundle-item" 
-            *ngFor="let bundle of course.bundles"
-            [class.selected]="selectedBundle === bundle"
-            (click)="onBundleSelected(bundle)"
-          >
-            <input 
-              type="radio" 
-              [value]="bundle" 
-              [checked]="selectedBundle === bundle"
-              name="bundle" 
-            />
-            <label>{{ bundle }}</label>
-          </div>
-        </div>
-      </section>
-    </div>
+      <div *ngIf="course.availability.length === 0" class="empty-state">
+        <p>No availability slots available for this course yet.</p>
+      </div>
 
-    <aside class="sidebar">
+      <div *ngIf="course.availability.length > 0" class="calendar-container">
+        <full-calendar [options]="calendarOptions"></full-calendar>
+      </div>
+    </section>
+
+    <!-- Booking Panel -->
+    <section class="booking-section" *ngIf="selectedSlot">
+      <h2>📅 Book Your Session</h2>
+
       <div class="booking-card">
-        <h3>Ready to Enroll?</h3>
-        <div class="booking-details">
-          <div class="detail-row">
-            <span>Course:</span>
-            <strong>{{ course.title }}</strong>
-          </div>
-          <div class="detail-row">
-            <span>Price:</span>
-            <strong>${{ course.price }}</strong>
-          </div>
-          <div class="detail-row">
-            <span>Duration:</span>
-            <strong>{{ course.duration }}</strong>
-          </div>
-          <div class="detail-row" *ngIf="selectedBundle">
-            <span>Bundle:</span>
-            <strong>{{ selectedBundle }}</strong>
+        <div class="booking-info">
+          <p><strong>Tutor:</strong> {{ selectedSlot.taName }}</p>
+          <p><strong>Date:</strong> {{ selectedSlot.selectedDate | date:'fullDate' }}</p>
+          <p><strong>Time:</strong> {{ selectedSlot.startTime }} - {{ selectedSlot.endTime }}</p>
+          <p><strong>Available Seats:</strong> {{ selectedSlot.availableSeats }} / {{ selectedSlot.capacity }}</p>
+        </div>
+
+        <div class="credits-section">
+          <label for="creditsToUse">Credits to Use:</label>
+          <input type="number" id="creditsToUse" [(ngModel)]="creditsToUse" min="1" max="10" />
+
+          <div class="credits-info" *ngIf="studentCredits">
+            <p><strong>Your Credits:</strong></p>
+            <p>Total: {{ studentCredits.totalCredits }}</p>
+            <p>Available: {{ studentCredits.availableCredits }}</p>
+            <p *ngIf="creditsToUse > studentCredits.availableCredits" class="warning">
+              ⚠️ Insufficient credits!
+            </p>
           </div>
         </div>
-        <button 
-          class="btn-book" 
-          (click)="bookCourse()"
-          [disabled]="!selectedBundle"
-          [class.disabled]="!selectedBundle"
+
+        <button
+          class="btn-book"
+          (click)="bookSlot()"
+          [disabled]="bookingInProgress || !studentCredits || creditsToUse > studentCredits.availableCredits"
         >
-          {{ selectedBundle ? 'Book Now' : 'Select a Bundle First' }}
+          {{ bookingInProgress ? 'Booking...' : 'Confirm Booking' }}
+        </button>
+        
+        <button class="btn-cancel" (click)="selectedSlot = null">
+          Cancel
         </button>
       </div>
-    </aside>
+    </section>
   </div>
-</div>
-
-<div class="course-not-found" *ngIf="!course">
-  <p>Course not found</p>
-  <button (click)="goBack()">Back to Courses</button>
 </div>

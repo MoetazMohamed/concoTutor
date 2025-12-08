@@ -261,4 +261,101 @@ export class BookingsService {
 
     return cancelled;
   }
+
+  async bookAvailabilitySlot(dto: {
+    studentId: string;
+    taId: string;
+    courseId: string;
+    availabilitySlotId: string;
+    creditsToUse: number;
+  }) {
+    // Verify student exists and has enough credits
+    const student = await this.prisma.student.findUnique({
+      where: { id: dto.studentId },
+    });
+    if (!student) {
+      throw new NotFoundException(`Student with ID ${dto.studentId} not found`);
+    }
+
+    const availableCredits = student.totalCredits - student.usedCredits;
+    if (availableCredits < dto.creditsToUse) {
+      throw new BadRequestException(
+        `Insufficient credits. You have ${availableCredits} credits available but need ${dto.creditsToUse}`,
+      );
+    }
+
+    // Verify availability slot exists
+    const slot = await this.prisma.tAAvailability.findUnique({
+      where: { id: dto.availabilitySlotId },
+    });
+    if (!slot) {
+      throw new NotFoundException(
+        `Availability slot with ID ${dto.availabilitySlotId} not found`,
+      );
+    }
+
+    // Check if slot is full
+    if (slot.bookedCount >= slot.capacity) {
+      throw new BadRequestException('This availability slot is full');
+    }
+
+    // Verify TA and course match the slot
+    if (slot.taId !== dto.taId || slot.courseId !== dto.courseId) {
+      throw new BadRequestException(
+        'Availability slot does not match the specified TA or course',
+      );
+    }
+
+    // Deduct credits from student
+    await this.prisma.student.update({
+      where: { id: dto.studentId },
+      data: {
+        usedCredits: student.usedCredits + dto.creditsToUse,
+      },
+    });
+
+    // Record credit transaction
+    await this.prisma.creditTransaction.create({
+      data: {
+        studentId: dto.studentId,
+        amount: dto.creditsToUse,
+        type: 'DEDUCT',
+        reason: `Booked session with tutor for ${slot.date.toISOString().split('T')[0]} at ${slot.startTime}`,
+      },
+    });
+
+    // Increment booked count in availability slot
+    await this.prisma.tAAvailability.update({
+      where: { id: dto.availabilitySlotId },
+      data: {
+        bookedCount: slot.bookedCount + 1,
+      },
+    });
+
+    // Create booking record (if Booking model is used separately)
+    const booking = await this.prisma.booking.create({
+      data: {
+        students: {
+          create: {
+            studentId: dto.studentId,
+          },
+        },
+        taId: dto.taId,
+        courseId: dto.courseId,
+        status: Status.BOOKED,
+        sessionType: SessionType.INDIVIDUAL,
+        date: new Date(),
+        durationMinutes: 60,
+        pricePerStudent: dto.creditsToUse,
+      },
+    });
+
+    return {
+      success: true,
+      message: 'Booking confirmed successfully',
+      booking,
+      creditsUsed: dto.creditsToUse,
+      remainingCredits: availableCredits - dto.creditsToUse,
+    };
+  }
 }

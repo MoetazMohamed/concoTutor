@@ -1,0 +1,111 @@
+<div class="register-container">
+  <div class="register-card">
+    <h1>Create Account</h1>
+
+    <!-- User Type Toggle -->
+    <div class="user-type-selector">
+      <button
+        [class.active]="userType === 'student'"
+        (click)="toggleUserType('student')"
+        class="toggle-btn"
+      >
+        Student
+      </button>
+      <button
+        [class.active]="userType === 'ta'"
+        (click)="toggleUserType('ta')"
+        class="toggle-btn"
+      >
+        Tutor
+      </button>
+    </div>
+
+    <!-- Messages -->
+    <div *ngIf="errorMessage" class="alert alert-error">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+
+    <!-- Registration Form -->
+    <form (ngSubmit)="register()">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input
+          type="text"
+          id="name"
+          [(ngModel)]="name"
+          name="name"
+          placeholder="Your full name"
+          [disabled]="loading"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="your@email.com"
+          [disabled]="loading"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="Enter password (min. 6 characters)"
+          [disabled]="loading"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          placeholder="Confirm password"
+          [disabled]="loading"
+          required
+        />
+      </div>
+
+      <!-- Tutor-specific fields -->
+      <div *ngIf="userType === 'ta'">
+        <div class="form-group">
+          <label for="degree">Degree / Qualification</label>
+          <input
+            type="text"
+            id="degree"
+            [(ngModel)]="degree"
+            name="degree"
+            placeholder="e.g., Bachelor's in Mathematics"
+            [disabled]="loading"
+          />
+        </div>
+      </div>
+
+      <button type="submit" class="register-btn" [disabled]="loading">
+        {{ loading ? 'Creating Account...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <!-- Login Link -->
+    <div class="login-link">
+      Already have an account?
+      <a href="/login">Login here</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,218 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div>
+      <h1>Tutor Dashboard</h1>
+      <p class="subtitle">Welcome, {{ taName }}!</p>
+    </div>
+    <button class="logout-btn" (click)="logout()">Logout</button>
+  </div>
+
+  <!-- Messages -->
+  <div *ngIf="errorMessage" class="alert alert-error">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <!-- Courses Selection -->
+  <div class="courses-selector">
+    <label for="courseSelect">Select Course:</label>
+    <select id="courseSelect" [(ngModel)]="selectedCourse" (change)="onCourseChange()" [disabled]="loading">
+      <option *ngFor="let course of courses" [value]="course.id">
+        {{ course.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Tutor Actions -->
+  <div class="tutor-actions">
+    <button class="action-btn" (click)="showCreateCourse = !showCreateCourse">
+      {{ showCreateCourse ? '✕ Cancel' : '+ Create Course' }}
+    </button>
+    <button class="action-btn" (click)="showAssignTutor = !showAssignTutor">
+      {{ showAssignTutor ? '✕ Cancel' : '👥 Assign Tutor' }}
+    </button>
+    <button class="action-btn" (click)="showCreateTutor = !showCreateTutor">
+      {{ showCreateTutor ? '✕ Cancel' : '➕ Create Tutor' }}
+    </button>
+  </div>
+
+  <!-- Create Course Form -->
+  <div *ngIf="showCreateCourse" class="create-course-form">
+    <h3>Create New Course</h3>
+    <form (ngSubmit)="createCourse()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="courseName">Course Name *</label>
+          <input id="courseName" [(ngModel)]="newCourse.name" name="courseName" placeholder="e.g., Advanced Mathematics" required />
+        </div>
+        <div class="form-group">
+          <label for="courseCode">Course Code *</label>
+          <input id="courseCode" [(ngModel)]="newCourse.code" name="courseCode" placeholder="e.g., MATH301" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="courseDesc">Description (Optional)</label>
+        <textarea id="courseDesc" [(ngModel)]="newCourse.description" name="courseDesc" placeholder="Enter course description..."></textarea>
+      </div>
+      <button type="submit" class="submit-btn">✓ Create Course</button>
+    </form>
+  </div>
+
+  <!-- Assign Tutor Form -->
+  <div *ngIf="showAssignTutor" class="assign-tutor-form">
+    <h3>Assign Tutor to Course</h3>
+    <form (ngSubmit)="assignTutor()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="assignCourse">Select Course *</label>
+          <select id="assignCourse" [(ngModel)]="assignTutorData.courseId" name="assignCourse" required>
+            <option value="" disabled selected>-- Choose a course --</option>
+            <option *ngFor="let c of allCourses" [value]="c.id">{{ c.name }} ({{ c.code }})</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="assignTutor">Select Tutor *</label>
+          <select id="assignTutor" [(ngModel)]="assignTutorData.tutorId" name="assignTutor" required>
+            <option value="" disabled selected>-- Choose a tutor --</option>
+            <option *ngFor="let t of tutorsList" [value]="t.id">{{ t.name }} ({{ t.email }})</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="submit-btn">✓ Assign Tutor</button>
+    </form>
+  </div>
+
+  <!-- Create Tutor Form -->
+  <div *ngIf="showCreateTutor" class="create-tutor-form">
+    <h3>Create New Tutor</h3>
+    <form (ngSubmit)="createTutor()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="tutorName">Full Name *</label>
+          <input id="tutorName" [(ngModel)]="newTutor.name" name="tutorName" placeholder="e.g., John Doe" required />
+        </div>
+        <div class="form-group">
+          <label for="tutorEmail">Email Address *</label>
+          <input id="tutorEmail" type="email" [(ngModel)]="newTutor.email" name="tutorEmail" placeholder="e.g., john@example.com" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="tutorPassword">Password *</label>
+          <input id="tutorPassword" type="password" [(ngModel)]="newTutor.password" name="tutorPassword" placeholder="Enter password" required minlength="6" />
+        </div>
+        <div class="form-group">
+          <label for="tutorDegree">Degree (Optional)</label>
+          <input id="tutorDegree" [(ngModel)]="newTutor.degree" name="tutorDegree" placeholder="e.g., MSc Computer Science" />
+        </div>
+      </div>
+      <button type="submit" class="submit-btn">✓ Create Tutor</button>
+    </form>
+  </div>
+
+  <!-- Availability Section -->
+  <div class="availability-section">
+    <div class="section-header">
+      <h2>Your Availability</h2>
+      <button class="add-btn" (click)="showAddAvailability = !showAddAvailability">
+        {{ showAddAvailability ? 'Cancel' : '+ Add Slot' }}
+      </button>
+    </div>
+
+    <!-- Add Availability Form -->
+    <div *ngIf="showAddAvailability" class="add-availability-form">
+      <h3>Add New Availability Slot</h3>
+      <form (ngSubmit)="addAvailability()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="availabilityDate">Date *</label>
+            <input 
+              type="date" 
+              id="availabilityDate" 
+              [(ngModel)]="newAvailability.date" 
+              name="availabilityDate"
+              [min]="getTodayDate()"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="startTime">Start Time *</label>
+            <input type="time" id="startTime" [(ngModel)]="newAvailability.startTime" name="startTime" required />
+          </div>
+
+          <div class="form-group">
+            <label for="endTime">End Time *</label>
+            <input type="time" id="endTime" [(ngModel)]="newAvailability.endTime" name="endTime" required />
+          </div>
+
+          <div class="form-group">
+            <label for="capacity">Capacity *</label>
+            <input
+              type="number"
+              id="capacity"
+              [(ngModel)]="newAvailability.capacity"
+              name="capacity"
+              min="1"
+              max="50"
+              required
+            />
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">Add Availability</button>
+      </form>
+    </div>
+
+    <!-- Availability Slots -->
+    <div *ngIf="loading" class="loading">
+      Loading availability...
+    </div>
+
+    <div *ngIf="!loading && availability.length === 0" class="empty-state">
+      <p>No availability slots set for this course.</p>
+    </div>
+
+    <div *ngIf="!loading && availability.length > 0" class="availability-grid">
+      <div *ngFor="let slot of availability" class="availability-card">
+        <div class="slot-header">
+          <span class="day-badge">{{ slot.date | date:'MMM d, y' }}</span>
+          <span class="time">{{ slot.startTime }} - {{ slot.endTime }}</span>
+        </div>
+        <div class="slot-details">
+          <p><strong>Capacity:</strong> {{ slot.capacity }}</p>
+          <p><strong>Booked:</strong> {{ slot.bookedCount }} / {{ slot.capacity }}</p>
+          <p><strong>Available:</strong> {{ slot.capacity - slot.bookedCount }}</p>
+        </div>
+        <button class="delete-btn" (click)="deleteAvailability(slot.id)">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bookings Section -->
+  <div class="bookings-section">
+    <h2>Student Bookings</h2>
+
+    <div *ngIf="bookings.length === 0" class="empty-state">
+      <p>No student bookings for this course yet.</p>
+    </div>
+
+    <div *ngIf="bookings.length > 0" class="bookings-list">
+      <div *ngFor="let booking of bookings" class="booking-card">
+        <div class="booking-header">
+          <h3>{{ booking.student?.name }}</h3>
+          <span [class]="'status ' + getStatusClass(booking.status)">
+            {{ booking.status }}
+          </span>
+        </div>
+        <div class="booking-details">
+          <p><strong>Email:</strong> {{ booking.student?.email }}</p>
+          <p><strong>Time:</strong> {{ booking.startTime | date: 'short' }} - {{ booking.endTime | date: 'short' }}</p>
+          <p><strong>Credits Used:</strong> {{ booking.creditsUsed }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
