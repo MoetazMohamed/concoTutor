@@ -6,6 +6,9 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { CalendarOptions, EventClickArg } from '@fullcalendar/core';
+import { BookingsService } from '../../shared/services/bookings.service';
+import { CoursesService } from '../../shared/services/courses.service';
+import { GroupSessionsService } from '../../shared/services/group-sessions.service';
 
 interface Session {
   id: string;
@@ -30,10 +33,12 @@ interface Session {
 export class BookingComponent implements OnInit {
   selectedSession: any = null;
   bookingConfirmed = false;
-  courseId: number | null = null;
+  courseId: string | null = null;
   selectedBundle: string | null = null;
   courseName: string = '';
   allSessions: Session[] = [];
+  loading = true;
+  error: string | null = null;
 
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridMonth',
@@ -48,187 +53,79 @@ export class BookingComponent implements OnInit {
     eventDisplay: 'block'
   };
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private bookingsService: BookingsService,
+    private coursesService: CoursesService,
+    private groupSessionsService: GroupSessionsService
+  ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      this.courseId = params['courseId'] ? Number(params['courseId']) : null;
+      this.courseId = params['courseId'] || null;
       this.selectedBundle = params['bundle'] || null;
-      this.loadCourseName();
-      this.loadAvailableSessions();
+      if (this.courseId) {
+        this.loadCourseData();
+        this.loadSessions();
+      }
     });
   }
 
-  loadCourseName() {
-    const courseNames: { [key: number]: string } = {
-      1: 'Advanced Mathematics',
-      2: 'English Literature',
-      3: 'Physics Fundamentals'
-    };
-    this.courseName = this.courseId ? courseNames[this.courseId] || '' : '';
-  }
-
-  loadAvailableSessions() {
-    const today = new Date();
+  loadCourseData() {
+    if (!this.courseId) return;
     
-    // Define all sessions for all courses and bundles
-    const allSessionsData: Session[] = [
-      // Course 1 - Advanced Mathematics
-      {
-        id: '1',
-        title: 'Advanced Mathematics',
-        start: this.addDays(today, 3),
-        end: this.addDaysAndHours(today, 3, 1),
-        backgroundColor: '#007bff',
-        borderColor: '#0056b3',
-        instructor: 'Ahmed Mohamed',
-        availableSeats: 5,
-        courseId: 1,
-        bundle: 'Bundle A: Calc + Algebra'
+    this.coursesService.getCourseById(this.courseId).subscribe({
+      next: (course: any) => {
+        this.courseName = course.name;
       },
-      {
-        id: '2',
-        title: 'Advanced Mathematics',
-        start: this.addDays(today, 5),
-        end: this.addDaysAndHours(today, 5, 1),
-        backgroundColor: '#007bff',
-        borderColor: '#0056b3',
-        instructor: 'Ahmed Mohamed',
-        availableSeats: 3,
-        courseId: 1,
-        bundle: 'Bundle A: Calc + Algebra'
-      },
-      {
-        id: '3',
-        title: 'Advanced Mathematics',
-        start: this.addDays(today, 7),
-        end: this.addDaysAndHours(today, 7, 1),
-        backgroundColor: '#007bff',
-        borderColor: '#0056b3',
-        instructor: 'Ahmed Mohamed',
-        availableSeats: 6,
-        courseId: 1,
-        bundle: 'Bundle B: All Math Courses'
-      },
-      {
-        id: '4',
-        title: 'Advanced Mathematics',
-        start: this.addDays(today, 10),
-        end: this.addDaysAndHours(today, 10, 1),
-        backgroundColor: '#007bff',
-        borderColor: '#0056b3',
-        instructor: 'Ahmed Mohamed',
-        availableSeats: 4,
-        courseId: 1,
-        bundle: 'Bundle C: Math + Physics'
-      },
-      // Course 2 - English Literature
-      {
-        id: '5',
-        title: 'English Literature',
-        start: this.addDays(today, 4),
-        end: this.addDaysAndHours(today, 4, 1),
-        backgroundColor: '#28a745',
-        borderColor: '#1e7e34',
-        instructor: 'Fatima Hassan',
-        availableSeats: 8,
-        courseId: 2,
-        bundle: 'Bundle A: Lit + Writing'
-      },
-      {
-        id: '6',
-        title: 'English Literature',
-        start: this.addDays(today, 6),
-        end: this.addDaysAndHours(today, 6, 1),
-        backgroundColor: '#28a745',
-        borderColor: '#1e7e34',
-        instructor: 'Fatima Hassan',
-        availableSeats: 2,
-        courseId: 2,
-        bundle: 'Bundle B: All Language Courses'
-      },
-      {
-        id: '7',
-        title: 'English Literature',
-        start: this.addDays(today, 8),
-        end: this.addDaysAndHours(today, 8, 1),
-        backgroundColor: '#28a745',
-        borderColor: '#1e7e34',
-        instructor: 'Fatima Hassan',
-        availableSeats: 7,
-        courseId: 2,
-        bundle: 'Bundle A: Lit + Writing'
-      },
-      // Course 3 - Physics Fundamentals
-      {
-        id: '8',
-        title: 'Physics Fundamentals',
-        start: this.addDays(today, 7),
-        end: this.addDaysAndHours(today, 7, 1),
-        backgroundColor: '#ffc107',
-        borderColor: '#e0a800',
-        instructor: 'Omar Ali',
-        availableSeats: 6,
-        courseId: 3,
-        bundle: 'Bundle A: Physics Basics'
-      },
-      {
-        id: '9',
-        title: 'Physics Fundamentals',
-        start: this.addDays(today, 10),
-        end: this.addDaysAndHours(today, 10, 1),
-        backgroundColor: '#ffc107',
-        borderColor: '#e0a800',
-        instructor: 'Omar Ali',
-        availableSeats: 4,
-        courseId: 3,
-        bundle: 'Bundle B: Physics + Math'
-      },
-      {
-        id: '10',
-        title: 'Physics Fundamentals',
-        start: this.addDays(today, 12),
-        end: this.addDaysAndHours(today, 12, 1),
-        backgroundColor: '#ffc107',
-        borderColor: '#e0a800',
-        instructor: 'Omar Ali',
-        availableSeats: 5,
-        courseId: 3,
-        bundle: 'Bundle A: Physics Basics'
+      error: (err) => {
+        console.error('Error loading course:', err);
       }
-    ];
-
-    this.allSessions = allSessionsData;
-    this.filterAndDisplaySessions();
+    });
   }
 
-  filterAndDisplaySessions() {
-    let filteredSessions = this.allSessions;
+  loadSessions() {
+    if (!this.courseId) return;
 
-    // Filter by course if courseId is provided
-    if (this.courseId) {
-      filteredSessions = filteredSessions.filter(s => s.courseId === this.courseId);
-    }
-
-    // Filter by bundle if bundle is provided
-    if (this.selectedBundle) {
-      filteredSessions = filteredSessions.filter(s => s.bundle === this.selectedBundle);
-    }
-
-    // Convert to FullCalendar format
-    const events = filteredSessions.map(session => ({
-      id: session.id,
-      title: session.title,
-      start: session.start,
-      end: session.end,
-      backgroundColor: session.backgroundColor,
-      borderColor: session.borderColor,
-      instructor: session.instructor,
-      availableSeats: session.availableSeats,
-      bundle: session.bundle
-    }));
-
-    this.calendarOptions = { ...this.calendarOptions, events };
+    this.loading = true;
+    this.error = null;
+    
+    this.groupSessionsService.getSessionsByCourse(this.courseId).subscribe({
+      next: (sessions: any) => {
+        this.allSessions = sessions.map((session: any) => ({
+          id: session.id,
+          title: this.courseName || 'Session',
+          start: new Date(session.createdAt),
+          end: new Date(new Date(session.createdAt).getTime() + 3600000),
+          backgroundColor: '#007bff',
+          borderColor: '#0056b3',
+          instructor: 'Course TA',
+          availableSeats: session.maxCapacity - session.currentStudentCount,
+          courseId: parseInt(this.courseId || '0'),
+          bundle: this.selectedBundle || 'Standard'
+        }));
+        
+        this.calendarOptions = {
+          ...this.calendarOptions,
+          events: this.allSessions.map(s => ({
+            id: s.id,
+            title: s.title,
+            start: s.start,
+            end: s.end,
+            backgroundColor: s.backgroundColor,
+            borderColor: s.borderColor,
+            extendedProps: { ...s }
+          }))
+        };
+        
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading sessions:', err);
+        this.error = 'Failed to load sessions';
+        this.loading = false;
+      }
+    });
   }
 
   handleEventClick(arg: EventClickArg) {
@@ -246,27 +143,34 @@ export class BookingComponent implements OnInit {
   }
 
   confirmBooking() {
-    if (this.selectedSession) {
-      this.bookingConfirmed = true;
-      console.log('Booking confirmed:', this.selectedSession);
+    if (!this.selectedSession) {
+      alert('Please select a session');
+      return;
     }
+
+    const bookingDto = {
+      studentId: 'student-1',
+      courseId: this.courseId || '',
+      productId: 'product-1',
+      taId: 'ta-1',
+      sessionCount: 1
+    };
+
+    this.bookingsService.createBooking(bookingDto).subscribe({
+      next: (booking: any) => {
+        this.bookingConfirmed = true;
+        alert('Booking confirmed! Booking ID: ' + booking.id);
+      },
+      error: (err) => {
+        console.error('Error creating booking:', err);
+        alert('Failed to create booking. Please try again.');
+      }
+    });
   }
 
   cancelSelection() {
     this.selectedSession = null;
     this.bookingConfirmed = false;
   }
-
-  private addDays(date: Date, days: number): Date {
-    const result = new Date(date);
-    result.setDate(result.getDate() + days);
-    result.setHours(10, 0, 0, 0);
-    return result;
-  }
-
-  private addDaysAndHours(date: Date, days: number, hours: number): Date {
-    const result = this.addDays(date, days);
-    result.setHours(result.getHours() + hours);
-    return result;
-  }
 }
+

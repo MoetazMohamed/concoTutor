@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ApiService } from '../../../shared/services/api.service';
 
 @Component({
   selector: 'app-contact-form',
@@ -9,15 +10,17 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./contact-form.component.scss'],
 })
 export class ContactFormComponent {
-   form;
-  constructor(private fb: FormBuilder) {
-      this.form = this.fb.group({
-    name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    subject: ['', Validators.required],
-  });}
-  
+  form;
+  submitted = false;
+  submitting = false;
 
+  constructor(private fb: FormBuilder, private api: ApiService) {
+    this.form = this.fb.group({
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      subject: ['', Validators.required],
+    });
+  }
 
   onSubmit() {
     if (this.form.invalid) {
@@ -25,7 +28,23 @@ export class ContactFormComponent {
       return;
     }
 
-    // TODO: integrate with backend / email service
-    console.log('Form submitted', this.form.value);
+    this.submitting = true;
+    this.api.post('/contact', this.form.value).subscribe({
+      next: (response: any) => {
+        console.log('Contact form submitted successfully');
+        this.submitted = true;
+        this.submitting = false;
+        this.form.reset();
+        setTimeout(() => {
+          this.submitted = false;
+        }, 5000);
+      },
+      error: (err) => {
+        console.error('Error submitting contact form:', err);
+        this.submitting = false;
+        alert('Failed to submit form. Please try again.');
+      }
+    });
   }
 }
+
